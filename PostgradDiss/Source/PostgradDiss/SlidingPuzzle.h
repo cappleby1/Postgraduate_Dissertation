@@ -64,9 +64,13 @@ protected:
     TMap<UButton*, FIntPoint> ButtonToGridMap;
 
 
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void OnTileClicked();
+    UFUNCTION(BlueprintCallable)
     void SetupBoard();
+    UFUNCTION(BlueprintCallable)
     bool IsAdjacent(int r, int c);
+    UFUNCTION(BlueprintCallable)
     void UpdateMenuTileVisibility();
+
 };

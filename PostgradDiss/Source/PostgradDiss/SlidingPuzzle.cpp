@@ -4,6 +4,7 @@ void USlidingPuzzle::NativeConstruct()
 {
     Super::NativeConstruct();
     SetupBoard();
+    UE_LOG(LogTemp, Warning, TEXT("Board Set Up"));
 
     if (Tile_0) { Tile_0->OnClicked.AddDynamic(this, &USlidingPuzzle::OnTileClicked); }
         
@@ -30,7 +31,6 @@ void USlidingPuzzle::OnTileClicked()
         UpdateMenuTileVisibility();  
     }
 }
-
 
 bool USlidingPuzzle::IsAdjacent(int r, int c)
 {
@@ -62,7 +62,6 @@ void USlidingPuzzle::UpdateMenuTileVisibility()
         }
     }
 }
-
 
 
 void USlidingPuzzle::SetupBoard()
