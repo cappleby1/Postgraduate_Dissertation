@@ -1,23 +1,23 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 using UnrealBuildTool;
 
 public class PostgradDiss : ModuleRules
 {
-	public PostgradDiss(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+    public PostgradDiss(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+        PublicDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "InputCore",
+            "UMG",         // Add this
+            "Slate",       // Add this if you use Slate UI widgets
+            "SlateCore"    // Add this if you use Slate UI widgets
+        });
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+        PrivateDependencyModuleNames.AddRange(new string[] { });
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-	}
+        // If you want, uncomment and add other modules as needed
+    }
 }

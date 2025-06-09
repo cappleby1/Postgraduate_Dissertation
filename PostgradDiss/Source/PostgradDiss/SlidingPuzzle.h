@@ -2,13 +2,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <string>
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/UniformGridPanel.h"
 #include "SlidingPuzzle.generated.h"     
 
 
-UCLASS()                                 
+UCLASS(Blueprintable)
 class POSTGRADDISS_API USlidingPuzzle : public UUserWidget
 {
     GENERATED_BODY()                   
@@ -16,6 +17,9 @@ class POSTGRADDISS_API USlidingPuzzle : public UUserWidget
 protected:
     UPROPERTY(meta = (BindWidget))
     UUniformGridPanel* TileGrid;
+
+    UPROPERTY(meta = (BindWidget))
+    TArray<UButton*> MenuTiles;
 
     UPROPERTY(meta = (BindWidget))
     UButton* Tile_0;
@@ -57,8 +61,12 @@ protected:
     int y;
     int max_x = 4;
     int max_y = 3;
+    TMap<UButton*, FIntPoint> ButtonToGridMap;
+
 
     UFUNCTION()
     void OnTileClicked();
     void SetupBoard();
+    bool IsAdjacent(int r, int c);
+    void UpdateMenuTileVisibility();
 };
