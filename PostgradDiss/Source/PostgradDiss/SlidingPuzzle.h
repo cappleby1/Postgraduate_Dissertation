@@ -53,6 +53,10 @@ protected:
     TArray<UButton*> Tiles;
     int Board[4][4];
     FIntPoint EmptyPos;
+    int x;
+    int y;
+    int max_x = 4;
+    int max_y = 3;
 
     UFUNCTION()
     void OnTileClicked();

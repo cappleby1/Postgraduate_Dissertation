@@ -12,7 +12,6 @@ void USlidingPuzzle::NativeConstruct()
 void USlidingPuzzle::OnTileClicked()
 {
 
-
 }
 
 void USlidingPuzzle::SetupBoard()
