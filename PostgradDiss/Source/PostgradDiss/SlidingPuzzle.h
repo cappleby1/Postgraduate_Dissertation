@@ -63,14 +63,20 @@ protected:
     int max_y = 3;
     TMap<UButton*, FIntPoint> ButtonToGridMap;
 
+    UPROPERTY()
+    UButton* CurrentButton; // Store reference to the clicked button
 
-    UFUNCTION(BlueprintCallable, Category = "Tiles")
+
+public:
+    UFUNCTION(BlueprintCallable)
     void OnTileClicked();
+
     UFUNCTION(BlueprintCallable)
     void SetupBoard();
+
     UFUNCTION(BlueprintCallable)
     bool IsAdjacent(int r, int c);
+
     UFUNCTION(BlueprintCallable)
     void UpdateMenuTileVisibility();
-
 };
