@@ -18,7 +18,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UUniformGridPanel* TileGrid;
 
-    UPROPERTY(meta = (BindWidget))
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tiles")
     TArray<UButton*> MenuTiles;
 
     UPROPERTY(meta = (BindWidget))
@@ -64,7 +64,7 @@ protected:
     TMap<UButton*, FIntPoint> ButtonToGridMap;
 
 
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Tiles")
     void OnTileClicked();
     UFUNCTION(BlueprintCallable)
     void SetupBoard();

@@ -50,14 +50,11 @@ void USlidingPuzzle::UpdateMenuTileVisibility()
         for (int c = 0; c < 4; ++c)
         {
             int Index = Board[r][c];
-            UButton* MenuTile = MenuTiles[Index];  // or however you track menu tiles
+            UButton* MenuTile = MenuTiles[Index];  
             if (MenuTile)
             {
                 MenuTile->SetVisibility(Index == 0 ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
                 UE_LOG(LogTemp, Warning, TEXT("Menu Updated"));
-
-
-                // Optionally update position or text/image on menu
             }
         }
     }
