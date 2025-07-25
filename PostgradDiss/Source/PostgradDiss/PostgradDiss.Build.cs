@@ -11,13 +11,11 @@ public class PostgradDiss : ModuleRules
             "CoreUObject",
             "Engine",
             "InputCore",
-            "UMG",         // Add this
-            "Slate",       // Add this if you use Slate UI widgets
-            "SlateCore"    // Add this if you use Slate UI widgets
+			"UMG",          
+            "Slate",
+            "SlateCore" 
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
-
-        // If you want, uncomment and add other modules as needed
     }
 }
