@@ -4,25 +4,38 @@ void USlidingPuzzleLogic::NativeConstruct()
 {
     Super::NativeConstruct();
 
+    MenuTiles.SetNum(16);
+
+    MenuTiles[0] = Tile_0;
+    MenuTiles[1] = Tile_1;
+    MenuTiles[2] = Tile_2;
+    MenuTiles[3] = Tile_3;
+    MenuTiles[4] = Tile_4;
+    MenuTiles[5] = Tile_5;
+    MenuTiles[6] = Tile_6;
+    MenuTiles[7] = Tile_7;
+    MenuTiles[8] = Tile_8;
+    MenuTiles[9] = Tile_9;
+    MenuTiles[10] = Tile_10;
+    MenuTiles[11] = Tile_11;
+    MenuTiles[12] = Tile_12;
+    MenuTiles[13] = Tile_13;
+    MenuTiles[14] = Tile_14; 
+    MenuTiles[15] = Tile_15;
+
     SetupBoard();
+
     UE_LOG(LogTemp, Warning, TEXT("Board Set Up"));
 
-    // Lambda binding for each button
-    if (Tile_0) Tile_0->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_1) Tile_1->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_2) Tile_2->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_3) Tile_3->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_4) Tile_4->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_5) Tile_5->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_6) Tile_6->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_7) Tile_7->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_8) Tile_8->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_9) Tile_9->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_10) Tile_10->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_11) Tile_11->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_12) Tile_12->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-    if (Tile_13) Tile_13->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
+    for (int i = 0; i < MenuTiles.Num(); ++i)
+    {
+        if (MenuTiles[i])
+        {
+            MenuTiles[i]->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
+        }
+    }
 }
+
 
 
 void USlidingPuzzleLogic::OnTileClicked()
@@ -66,25 +79,23 @@ bool USlidingPuzzleLogic::IsAdjacent(int r, int c)
     int EmptyCol = EmptyPos.Y;
 
     return (
-        (r == EmptyRow && FMath::Abs(c - EmptyCol) == 1) || // Left/Right
-        (c == EmptyCol && FMath::Abs(r - EmptyRow) == 1)    // Up/Down
+        (r == EmptyRow && FMath::Abs(c - EmptyCol) == 1) || 
+        (c == EmptyCol && FMath::Abs(r - EmptyRow) == 1)    
         );
 }
 
 void USlidingPuzzleLogic::UpdateMenuTileVisibility()
 {
-    // Loop through all the tiles and update visibility based on the board's state
     for (int r = 0; r < 4; ++r)
     {
         for (int c = 0; c < 4; ++c)
         {
-            int TileIndex = Board[r][c];  // Get the index of the tile
-            if (TileIndex >= 0 && TileIndex < MenuTiles.Num())  // Ensure it's within bounds
+            int TileIndex = Board[r][c];  
+            if (TileIndex >= 0 && TileIndex < MenuTiles.Num())  
             {
                 UButton* TileButton = MenuTiles[TileIndex];
                 if (TileButton)
                 {
-                    // Hide the tile if it's the empty space (TileIndex == 0)
                     TileButton->SetVisibility(TileIndex == 0 ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
                     UE_LOG(LogTemp, Warning, TEXT("Menu Updated"));
                 }
@@ -96,38 +107,56 @@ void USlidingPuzzleLogic::UpdateMenuTileVisibility()
 
 void USlidingPuzzleLogic::SetupBoard()
 {
+    if (Tiles.Num() != 16)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Tiles array is not properly initialized."));
+        return;
+    }
+
+    if (!TileGrid)
+    {
+        UE_LOG(LogTemp, Error, TEXT("TileGrid is invalid!"));
+        return;
+    }
+
+
     int n = 1;
     for (int r = 0; r < 4; ++r)
     {
         for (int c = 0; c < 4; ++c)
         {
-            // Set the board values (3x3 grid of numbers and one empty space)
-            Board[r][c] = (r == 3 && c == 3) ? 0 : n++;  // Last cell is 0 (empty space)
+            
+            Board[r][c] = (r == 3 && c == 3) ? 0 : n++; 
         }
     }
 
-    EmptyPos = { 3, 3 };  // Empty space starts at the bottom-right corner
-
-    // Now fill in the grid with buttons and map them to grid positions
     for (int r = 0; r < 4; ++r)
     {
         for (int c = 0; c < 4; ++c)
         {
-            int TileIndex = Board[r][c];
-
-            UButton* TileButton = Tiles[TileIndex];  // Assuming Tiles[] holds your UButton references
-            if (TileButton)
+            int TileIndex = Board[r][c];  
+            if (TileIndex < 0 || TileIndex >= Tiles.Num())
             {
-                // Add button to the UniformGrid
-                TileGrid->AddChildToUniformGrid(TileButton, r, c);
-
-                // Set visibility for the empty tile
-                TileButton->SetVisibility(TileIndex == 0 ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
-
-                // Populate the ButtonToGridMap for quick lookups
-                ButtonToGridMap.Add(TileButton, FIntPoint(r, c));
+                UE_LOG(LogTemp, Error, TEXT("TileIndex %d is out of bounds!"), TileIndex);
+                continue;
             }
+
+            UButton* TileButton = Tiles[TileIndex];  
+            if (!TileButton)
+            {
+                UE_LOG(LogTemp, Error, TEXT("TileButton at index %d is null!"), TileIndex);
+                continue;
+            }
+
+            TileGrid->AddChildToUniformGrid(TileButton, r, c);
+
+            TileButton->SetVisibility(TileIndex == 0 ? ESlateVisibility::Hidden : ESlateVisibility::Visible);
+
+            ButtonToGridMap.Add(TileButton, FIntPoint(r, c));
         }
     }
+
+    UE_LOG(LogTemp, Warning, TEXT("Board setup complete."));
 }
+
 

@@ -49,6 +49,10 @@ protected:
     UButton* Tile_12;
     UPROPERTY(meta = (BindWidget))
     UButton* Tile_13;
+    UPROPERTY(meta = (BindWidget))
+    UButton* Tile_14;
+    UPROPERTY(meta = (BindWidget))
+    UButton* Tile_15;
 
 
     virtual void NativeConstruct() override;
