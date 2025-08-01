@@ -58,7 +58,6 @@ protected:
     virtual void NativeConstruct() override;
 
     // Board variables
-    TArray<UButton*> Tiles;
     int Board[4][4];
     FIntPoint EmptyPos;
     int x;
@@ -68,7 +67,7 @@ protected:
     TMap<UButton*, FIntPoint> ButtonToGridMap;
 
     UPROPERTY()
-    UButton* CurrentButton; // Store reference to the clicked button
+    UButton* CurrentButton;
 
 
 public:
@@ -83,4 +82,6 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void UpdateMenuTileVisibility();
+
+    void SetCurrentButton(UButton* Button);
 };
