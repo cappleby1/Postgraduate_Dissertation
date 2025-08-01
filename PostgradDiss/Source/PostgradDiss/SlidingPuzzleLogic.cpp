@@ -27,13 +27,15 @@ void USlidingPuzzleLogic::NativeConstruct()
 
     UE_LOG(LogTemp, Warning, TEXT("Board Set Up"));
 
+    // Bind OnTileClicked to each tile's click event
     for (int i = 0; i < MenuTiles.Num(); ++i)
     {
         if (MenuTiles[i])
         {
-            // Each button will set the global CurrentButton variable and then call OnTileClicked
+            // Bind all the tiles' OnClicked events to the same handler
             MenuTiles[i]->OnClicked.AddDynamic(this, &USlidingPuzzleLogic::OnTileClicked);
-            UE_LOG(LogTemp, Warning, TEXT("On click added for tile %d"), i);
+            // Keep track of which button is being clicked
+            ButtonToGridMap.Add(MenuTiles[i], FIntPoint(i / 4, i % 4));
         }
         else
         {
@@ -41,6 +43,7 @@ void USlidingPuzzleLogic::NativeConstruct()
         }
     }
 }
+
 
 
 void USlidingPuzzleLogic::SetCurrentButton(UButton* Button)
@@ -99,42 +102,44 @@ void USlidingPuzzleLogic::UpdateMenuTileVisibility()
 
 void USlidingPuzzleLogic::OnTileClicked()
 {
-    if (!CurrentButton)
+    // Get the button that was clicked
+    UButton* ClickedButton = Cast<UButton>(GetWidgetFromName("Tile_0"));
+    if (!ClickedButton)
     {
         UE_LOG(LogTemp, Warning, TEXT("CurrentButton is not set properly."));
         return;
     }
 
-    // Log the button press
-    UE_LOG(LogTemp, Warning, TEXT("Tile clicked: %s"), *CurrentButton->GetName());
-    UButton* ClickedButton = CurrentButton;
+    // Log the button click for debugging
+    UE_LOG(LogTemp, Warning, TEXT("Tile clicked: %s"), *ClickedButton->GetName());
 
-    // Ensure the clicked button is in the grid map
-    if (ButtonToGridMap.Contains(ClickedButton))
+    // Retrieve the grid position of the clicked button
+    FIntPoint ClickedPos = ButtonToGridMap[ClickedButton];
+    UE_LOG(LogTemp, Warning, TEXT("Tile clicked at position: [%d, %d]"), ClickedPos.X, ClickedPos.Y);
+
+    // Check if the clicked tile is adjacent to the empty tile
+    if (IsAdjacent(ClickedPos.X, ClickedPos.Y))
     {
-        FIntPoint ClickedPos = ButtonToGridMap[ClickedButton];
-        UE_LOG(LogTemp, Warning, TEXT("Tile clicked at position: [%d, %d]"), ClickedPos.X, ClickedPos.Y);
+        // Perform the move logic
+        Board[EmptyPos.X][EmptyPos.Y] = Board[ClickedPos.X][ClickedPos.Y];
+        Board[ClickedPos.X][ClickedPos.Y] = 0;
 
-        if (IsAdjacent(ClickedPos.X, ClickedPos.Y))
-        {
-            // Move tile logic
-            Board[EmptyPos.X][EmptyPos.Y] = Board[ClickedPos.X][ClickedPos.Y];
-            Board[ClickedPos.X][ClickedPos.Y] = 0;
+        // Update the UI, grid position, and visibility of the tiles
+        TileGrid->AddChildToUniformGrid(ClickedButton, EmptyPos.X, EmptyPos.Y);
+        ClickedButton->SetVisibility(ESlateVisibility::Hidden);  // Hide the clicked tile
 
-            // Update UI, grid position, visibility
-            TileGrid->AddChildToUniformGrid(ClickedButton, EmptyPos.X, EmptyPos.Y);
-            ClickedButton->SetVisibility(ESlateVisibility::Hidden);  // Hide the clicked tile
+        // Update visibility of the empty tile
+        UButton* EmptyTile = MenuTiles[0];  // assuming 0 represents the empty tile
+        EmptyTile->SetVisibility(ESlateVisibility::Visible);
 
-            // Update the empty tile visibility
-            UButton* EmptyTile = MenuTiles[0];
-            EmptyTile->SetVisibility(ESlateVisibility::Visible);
-
-            // Update the position of the empty tile
-            EmptyPos = ClickedPos;
-            UpdateMenuTileVisibility();
-        }
+        // Update the position of the empty tile
+        EmptyPos = ClickedPos;
+        UpdateMenuTileVisibility();
     }
 }
+
+
+
 
 
 void USlidingPuzzleLogic::SetupBoard()
