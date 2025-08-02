@@ -103,3 +103,9 @@ DerivedDataCache/*
 /PostgradDiss/Saved
 PostgradDiss/Saved/Logs/PostgradDiss.log
 PostgradDiss/.vsconfig
+PostgradDiss/Binaries/Win64/PostgradDiss.exp
+PostgradDiss/Binaries/Win64/PostgradDiss.pdb
+PostgradDiss/Binaries/Win64/PostgradDiss.target
+PostgradDiss/Binaries/Win64/tbb.pdb
+PostgradDiss/Binaries/Win64/tbbmalloc.pdb
+PostgradDiss/Build/Windows/FileOpenOrder/EditorOpenOrder.log
